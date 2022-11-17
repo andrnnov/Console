@@ -10,25 +10,33 @@ double discount_price(double price, int discount) {
 	}
 
 int main(void) {
-	int code[ALL_PRODUCT] = { 1000, 1001, 1102, 1023, 1149 };
-	char product[ALL_PRODUCT][40] = {
-		"тетрадь 48 л.",
-		"тетрадь 96 л.",
-		"шарикова€ ручка",
-		"маркер",
-		"циркуль"
-	};
-	double price[ALL_PRODUCT] = { 65, 108, 25, 56, 250 };
-	int num=0, discount[ALL_PRODUCT] = {15, 20, 0, 10, 30};
+	struct prod {
+		int code;
+		double price;
+		int discount;
+		char product[40];
+	} p[ALL_PRODUCT] = { 1000, 65, 15, "notepade 48 p.",
+						 1001, 108, 20, "notepade 96 p.",
+						 1102, 25, 0, "pen",
+						 1023, 56, 10, "marker",
+						 1149, 250, 30, "drawing compass"
+						};
+
+	/*	for (int i = 0; i < ALL_PRODUCT; i++) {
+		printf("code - %d,\tprice - %0.2f,\tdiscount - %d%%,\tdiscount price - %0.2f,\t", p[i].code, p[i].price, p[i].discount, discount_price(p[i].price, p[i].discount));
+		fputs(p[i].product, stdout);
+		printf("\n");
+	}*/
+
 	double sum = 0;
 	char str[5] = "    ";
-	int buff[50], num_buff = 0;
+	int buff[50], num_buff = 0, num = 0;
 
 	setlocale(LC_ALL, "Russian");
 
 	for (int i = 0; i < ALL_PRODUCT; i++) {
-		printf("код: %d, наименование: ", code[i]);
-		fputs(product[i], stdout);
+		printf("код: %d, наименование: ", p[i].code);
+		fputs(p[i].product, stdout);
 		printf("\n");
 	}
 	while (strcmp(str, "quit") && strcmp(str, "exit")) {
@@ -37,23 +45,23 @@ int main(void) {
 		if (strspn(str, "0123456789")) {
 			num = atoi(str);
 			for (int i = 0; i < ALL_PRODUCT; i++) 
-				if (code[i] == num) {
-					buff[num_buff] = code[i];
+				if (p[i].code == num) {
+					buff[num_buff] = p[i].code;
 					num_buff++;
-					printf("“овар в чеке: %d, %d\n", code[i], num_buff);
-					//					fputs(product[i], stdout);
-					//					printf("\tprice - %0.2f,\t discount - %d%%, discount price - %0.2f\n", price[i], discount[i], discount_price(price[i], discount[i]));
+					printf("“овар в чеке: %d, %d\n", p[i].code, num_buff);
 				}
 		}
 	}
 	for (int i = 0; i < num_buff; i++)
 		for (int j = 0; j < ALL_PRODUCT; j++) {
-			if (code[j] == buff[i]) {
-					fputs(product[j], stdout);
-					printf("\tprice - %0.2f,\t discount - %d%%, discount price - %0.2f\n", price[j], discount[j], discount_price(price[j], discount[j]));
-					sum += discount_price(price[j], discount[j]);
+			if (p[j].code == buff[i]) {
+					printf("price - %0.2f,\tdiscount - %d%%,\tdiscount price - %0.2f\t", p[j].price, p[j].discount, discount_price(p[j].price, p[j].discount));
+					fputs(p[j].product, stdout);
+					printf("\n");
+					sum += discount_price(p[j].price, p[j].discount);
 			}
 		}
 
 	printf("сумма - %0.2f", sum);
+	return 0;
 }
